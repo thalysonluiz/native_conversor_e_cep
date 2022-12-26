@@ -13,6 +13,7 @@ export function Cep() {
   function limpar() {
     setCep('');
     inputRef.current.focus();
+    setEndereco({});
   }
 
   async function buscar() {
@@ -22,8 +23,14 @@ export function Cep() {
       return;
     }
 
-    const response = await apicep.get(`${cep}/json`);
-    setEndereco(response.data)
+    try {
+      const response = await apicep.get(`${cep}/json`);
+      setEndereco(response.data);
+      Keyboard.dismiss();
+
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
@@ -43,7 +50,7 @@ export function Cep() {
           style={styles.botao1}
           onPress={buscar}
         >
-          Converter
+          Buscar
         </Button>
 
         <Button
@@ -56,10 +63,10 @@ export function Cep() {
       </Box>
       <Center marginTop={10}>
         <Text style={styles.item}>CEP: {endereco.cep}</Text>
-        <Text style={styles.item}>Logradouro: </Text>
-        <Text style={styles.item}>Bairro: </Text>
-        <Text style={styles.item}>Cidade: </Text>
-        <Text style={styles.item}>Estado: </Text>
+        <Text style={styles.item}>Logradouro: {endereco.logradouro}</Text>
+        <Text style={styles.item}>Bairro: {endereco.bairro}</Text>
+        <Text style={styles.item}>Cidade: {endereco.localidade}</Text>
+        <Text style={styles.item}>Estado: {endereco.uf}</Text>
       </Center>
     </Center>
   );
